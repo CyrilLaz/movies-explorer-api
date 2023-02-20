@@ -4,8 +4,9 @@
   "description": "Серверное приложение для сайта, на котором можно найти фильмы по запросу и сохранить в личном кабинете.",
   "main": "app.js",
   "scripts": {
-    "dev": "nodemon app.js",
-    "start": "node app.js"
+    "lint": "npx eslint .",
+    "dev": "nodemon ./app.js",
+    "start": "node ./app.js"
   },
   "repository": {
     "type": "git",

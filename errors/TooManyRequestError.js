@@ -1,7 +1,7 @@
 class TooManyRequestError extends Error {
   constructor(message) {
     super(message);
-    this.name = 'tooManyRequestError';
+    this.name = 'TooManyRequestError';
     this.statusCode = 429;
   }
 }
