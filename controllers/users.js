@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 const User = require('../models/User');
 const jwtKey = require('../constants/jwtKey');
+const NoExistError = require('../errors/NoExistError');
 
 const createUser = (req, res, next) => {
   const { name, email, password } = req.body;
@@ -47,4 +48,24 @@ const logout = (req, res) => {
     })
     .send({ message: 'Осуществлен выход из профиля' });
 };
-module.exports = { createUser, login, logout };
+
+const getUserData = (req, res, next) => {
+  const userId = req.user;
+  User.findById(userId).then((user) => {
+    if (!user) throw new NoExistError('Пользователь не существует');
+    res.send({ data: user });
+  }).catch(next);
+};
+
+const updateUserData = (req, res, next) => {
+  const userId = req.user;
+  const updData = req.body;
+  User.findByIdAndUpdate(userId, { ...updData }, { new: true }).then((user) => {
+    if (!user) throw new NoExistError('Пользователь не существует');
+    res.send({ data: user });
+  }).catch(next);
+};
+
+module.exports = {
+  createUser, login, logout, getUserData, updateUserData,
+};
