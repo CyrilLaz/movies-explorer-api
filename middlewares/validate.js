@@ -63,7 +63,7 @@ module.exports.tokenValidate = celebrate(
   {
     cookies: Joi.object().keys({
       // eslint-disable-next-line no-useless-escape
-      jwt: Joi.string().required().pattern(/^[\w\._\-]{10,}$/),
+      jwt: Joi.string().pattern(/^[\w\._\-]{10,}$/),
     }),
   },
 );
