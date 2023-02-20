@@ -8,6 +8,7 @@ const usersRouter = require('./routers/users');
 const moviesRouter = require('./routers/movies');
 const { createUser, login, logout } = require('./controllers/users');
 const handleErrors = require('./middlewares/handleErrors');
+const auth = require('./middlewares/auth');
 
 const { PORT = 3000, PATH_MONGO = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
@@ -22,8 +23,8 @@ app.post('/signup', createUser);
 app.post('/signin', login);
 app.post('/signout', logout);
 
-app.use('/users', usersRouter);
-app.use('/movies', moviesRouter);
+app.use('/users', auth, usersRouter);
+app.use('/movies', auth, moviesRouter);
 
 app.use(handleErrors);
 app.listen(PORT, () => {
