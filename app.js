@@ -16,12 +16,14 @@ const {
 } = require('./middlewares/validate');
 const { requestLogger, errorLogger } = require('./middlewares/logger');
 const apiRequestLimiter = require('./middlewares/apiRequestLimiter');
+const cors = require('./middlewares/cors');
 
 const { PORT = 3000, PATH_MONGO = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
 const app = express();
 
 app.use(apiRequestLimiter);
+app.use(cors);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
