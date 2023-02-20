@@ -14,6 +14,7 @@ const {
   createUserValidate,
   tokenValidate,
 } = require('./middlewares/validate');
+const { requestLogger, errorLogger } = require('./middlewares/logger');
 
 const { PORT = 3000, PATH_MONGO = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
@@ -24,6 +25,7 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(PATH_MONGO);
 
+app.use(requestLogger);
 app.post('/signup', createUserValidate, createUser);
 app.post('/signin', loginValidate, login);
 app.post('/signout', logout);
@@ -31,6 +33,7 @@ app.post('/signout', logout);
 app.use('/users', tokenValidate, auth, usersRouter);
 app.use('/movies', tokenValidate, auth, moviesRouter);
 
+app.use(errorLogger);
 app.use(handleErrors);
 app.listen(PORT, () => {
   console.log(`App listening on port ${PORT}`);
