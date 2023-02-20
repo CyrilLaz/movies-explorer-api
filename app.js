@@ -9,6 +9,11 @@ const moviesRouter = require('./routers/movies');
 const { createUser, login, logout } = require('./controllers/users');
 const handleErrors = require('./middlewares/handleErrors');
 const auth = require('./middlewares/auth');
+const {
+  loginValidate,
+  createUserValidate,
+  tokenValidate,
+} = require('./middlewares/validate');
 
 const { PORT = 3000, PATH_MONGO = 'mongodb://localhost:27017/bitfilmsdb' } = process.env;
 
@@ -19,12 +24,12 @@ app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 mongoose.connect(PATH_MONGO);
 
-app.post('/signup', createUser);
-app.post('/signin', login);
+app.post('/signup', createUserValidate, createUser);
+app.post('/signin', loginValidate, login);
 app.post('/signout', logout);
 
-app.use('/users', auth, usersRouter);
-app.use('/movies', auth, moviesRouter);
+app.use('/users', tokenValidate, auth, usersRouter);
+app.use('/movies', tokenValidate, auth, moviesRouter);
 
 app.use(handleErrors);
 app.listen(PORT, () => {

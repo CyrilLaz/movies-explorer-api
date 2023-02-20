@@ -32,6 +32,7 @@ const userSchema = new Schema(
   { versionKey: false },
 );
 
+// eslint-disable-next-line func-names
 userSchema.statics.findUserByCredentials = function (email, password) {
   // попытаемся найти пользователя по почте
   return this.findOne({ email })
