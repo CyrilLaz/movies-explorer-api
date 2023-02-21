@@ -3,6 +3,7 @@ const mongoose = require('mongoose');
 
 const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
+const helmet = require('helmet');
 
 const usersRouter = require('./routers/users');
 const moviesRouter = require('./routers/movies');
@@ -23,6 +24,7 @@ const { PORT = 3000, PATH_MONGO = 'mongodb://localhost:27017/bitfilmsdb' } = pro
 const app = express();
 
 app.use(apiRequestLimiter);
+app.use(helmet());
 app.use(cors);
 app.use(cookieParser());
 app.use(bodyParser.json());
