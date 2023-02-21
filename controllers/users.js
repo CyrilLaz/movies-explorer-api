@@ -51,21 +51,33 @@ const logout = (req, res) => {
 
 const getUserData = (req, res, next) => {
   const userId = req.user;
-  User.findById(userId).then((user) => {
-    if (!user) throw new NoExistError('Пользователь не существует');
-    res.send({ data: user });
-  }).catch(next);
+  User.findById(userId)
+    .then((user) => {
+      if (!user) throw new NoExistError('Пользователь не существует');
+      res.send({ data: user });
+    })
+    .catch(next);
 };
 
 const updateUserData = (req, res, next) => {
   const userId = req.user;
   const updData = req.body;
-  User.findByIdAndUpdate(userId, { ...updData }, { new: true }).then((user) => {
-    if (!user) throw new NoExistError('Пользователь не существует');
-    res.send({ data: user });
-  }).catch(next);
+  User.findByIdAndUpdate(
+    userId,
+    { ...updData },
+    { runValidators: true, new: true },
+  )
+    .then((user) => {
+      if (!user) throw new NoExistError('Пользователь не существует');
+      res.send({ data: user });
+    })
+    .catch(next);
 };
 
 module.exports = {
-  createUser, login, logout, getUserData, updateUserData,
+  createUser,
+  login,
+  logout,
+  getUserData,
+  updateUserData,
 };
