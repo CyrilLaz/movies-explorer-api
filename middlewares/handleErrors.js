@@ -5,6 +5,7 @@ const NoRightError = require('../errors/NoRightError');
 const TooManyRequestError = require('../errors/TooManyRequestError');
 const UnAuthError = require('../errors/UnAuthError');
 const UncorrectLoginError = require('../errors/UncorrectLoginError');
+const DublicateError = require('../errors/DublicateError');
 const {
   defaultErrorStatus,
   unUniqueStatus,
@@ -20,6 +21,7 @@ module.exports = (err, req, res, next) => {
     || err instanceof UnAuthError
     || err instanceof UnAuthError
     || err instanceof TooManyRequestError
+    || err instanceof DublicateError
   ) {
     return res.status(statusCode).send({ data: { message } });
   }

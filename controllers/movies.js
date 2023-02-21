@@ -1,3 +1,4 @@
+const DublicateError = require('../errors/DublicateError');
 const NoExistError = require('../errors/NoExistError');
 const NoRightError = require('../errors/NoRightError');
 const Movie = require('../models/Movie');
@@ -10,9 +11,15 @@ const getMovies = (req, res, next) => {
 };
 
 const addMovie = (req, res, next) => {
-  const userId = req.user;
-  const data = req.body;
-  Movie.create({ ...data, owner: userId })
+  const { _id: userId } = req.user;
+  const { movieId, ...data } = req.body;
+  Movie.isDublicate(userId, movieId)
+    .then((isDubl) => {
+      if (isDubl) {
+        throw new DublicateError('Такая карточка уже есть у пользователя');
+      }
+      return Movie.create({ ...data, movieId, owner: userId });
+    })
     .then((movie) => res.send({ data: movie }))
     .catch(next);
 };
