@@ -1,5 +1,6 @@
 /* eslint-disable no-useless-escape */
 const { Schema, model } = require('mongoose');
+const NoExistError = require('../errors/NoExistError');
 
 const movieSchema = Schema(
   {
@@ -67,4 +68,12 @@ const movieSchema = Schema(
 movieSchema.statics.isDublicate = function (userId, movieId) {
   return this.findOne({ owner: userId, movieId }).then((movie) => !!movie);
 };
+
+movieSchema.statics.isOwned = function (userId, id) {
+  return this.findById(id).then((movie) => {
+    if (!movie) throw new NoExistError('Такого фильма не существует');
+    return movie.owner._id.toString() === userId._id;
+  });
+};
+
 module.exports = model('movie', movieSchema);
