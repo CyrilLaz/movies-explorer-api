@@ -11,7 +11,7 @@ const getMovies = (req, res, next) => {
 };
 
 const addMovie = (req, res, next) => {
-  const { _id: userId } = req.user;
+  const userId = req.user;
   const { movieId, ...data } = req.body;
   Movie.isDublicate(userId, movieId)
     .then((isDubl) => {

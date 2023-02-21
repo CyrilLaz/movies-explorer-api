@@ -51,8 +51,7 @@ module.exports.addMovieValidate = celebrate(
           /https?/,
         ],
       }),
-      owner: Joi.string().pattern(/^[a-z0-9]{24}$/),
-      movieId: Joi.string().pattern(/^[a-z0-9]{24}$/), // потом надо првоерить как выглядит это поле
+      movieId: Joi.string().required().pattern(/^[a-z0-9]{24}$/), // потом надо првоерить как выглядит это поле
       nameRU: Joi.string().required().min(2).max(30),
       nameEN: Joi.string().required().min(2).max(30),
     }),

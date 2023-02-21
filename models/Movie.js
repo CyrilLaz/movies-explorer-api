@@ -26,7 +26,7 @@ const movieSchema = Schema(
     image: {
       type: String,
       required: true,
-      validatу: {
+      validate: {
         validator(v) {
           const regex = /^https?:\/\/([\w\-]+\.)+[a-z]{2,}(\/[\w#\-\.~:\[\]@!\$&'\(\)\*\+,;=,]*)*$/i;
           return regex.test(v);
@@ -64,4 +64,7 @@ const movieSchema = Schema(
   { versionKey: false },
 );
 
+movieSchema.statics.isDublicate = function (userId, movieId) {
+  return this.findOne({ owner: userId, movieId }).then((movie) => !!movie);
+};
 module.exports = model('movie', movieSchema);
