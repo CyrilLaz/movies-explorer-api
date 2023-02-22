@@ -13,6 +13,7 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const apiRequestLimiter = require('./middlewares/apiRequestLimiter');
 const cors = require('./middlewares/cors');
 const routers = require('./routers');
+const cookieJwtToken = require('./middlewares/cookieJwtToken');
 
 const app = express();
 
@@ -22,9 +23,11 @@ app.use(cors);
 app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
+
+app.use(cookieJwtToken);
+
 mongoose.set('strictQuery', true);
 mongoose.connect(PATH_MONGO);
-
 app.use(requestLogger);
 app.use(routers);
 app.use(errorLogger);

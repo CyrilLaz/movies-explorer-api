@@ -1,7 +1,5 @@
 const bcrypt = require('bcryptjs');
-const jwt = require('jsonwebtoken');
 const User = require('../models/User');
-const jwtKey = require('../constants/jwtKey');
 const NoExistError = require('../errors/NoExistError');
 const { userNotFoundMessage } = require('../constants/messages').error;
 const { logoutMessage } = require('../constants/messages').report;
@@ -16,20 +14,8 @@ const createUser = (req, res, next) => {
       password: hash,
     }))
     .then((user) => user.toObject())
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        jwtKey, // секретный код
-        { expiresIn: '7d' },
-      );
-      return res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
-        })
-        .send({ data: { ...user, password: undefined } });
-    })
+    .then((user) => res.cookieJwtToken(user._id)
+      .send({ data: { ...user, password: undefined } }))
     .catch(next);
 };
 
@@ -37,20 +23,9 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then((user) => {
-      const token = jwt.sign(
-        { _id: user._id },
-        jwtKey, // секретный код
-        { expiresIn: '7d' },
-      );
-      return res
-        .cookie('jwt', token, {
-          maxAge: 3600000 * 24 * 7,
-          httpOnly: true,
-          sameSite: true,
-        })
-        .send({ data: { ...user, password: undefined } });
-    })
+    .then((user) => res
+      .cookieJwtToken(user._id)
+      .send({ data: { ...user, password: undefined } }))
     .catch(next);
 };
 
