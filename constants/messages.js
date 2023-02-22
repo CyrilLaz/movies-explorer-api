@@ -13,6 +13,7 @@ module.exports.error = {
   defaultErrorMessage: 'На сервере произошла ошибка',
   incorrectUrlMessage: 'url не прошел валидацию',
   movieNotFoundMessage: 'Такого фильма не существует',
+  incorrectPathMessage: 'Такого пути не существует',
 };
 
 module.exports.report = {
