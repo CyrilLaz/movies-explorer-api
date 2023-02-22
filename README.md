@@ -1,7 +1,7 @@
 # Movie-explorer-api
 ## Бэкенд приложение дипломной работы ЯПрактикума, факультета "Веб-разработки"
 
-Приложение построенное на основе `Express framework`. Работает с базой данных `MongoDb` с помощью библиотеки [`Mongoose`](https://mongoosejs.com/).  Все входящие данные проверяются c помощью [Celebrate](https://www.npmjs.com/package/celebrate). Производится запись всех посупающих запросов и ошибок в логи с помощью [Winston](https://github.com/winstonjs/winston).
+Приложение построенное на основе `Express framework`. Работает с базой данных `MongoDb` с помощью библиотеки [`Mongoose`](https://mongoosejs.com/).  Все входящие данные проверяются c помощью [Celebrate](https://www.npmjs.com/package/celebrate). Производится запись всех поступающих запросов и ошибок в логи с помощью [Winston](https://github.com/winstonjs/winston).
 Ограничить частоту запросов помогает [express-rate-limit](https://www.npmjs.com/package/express-rate-limit). \
 ### Создаются коллекции `users` и `movies`: \
 - При создании документа `user` проверяется уникальность поля `email`. Пароль в базу записывается в зашифрованном виде. \
@@ -18,6 +18,8 @@
 - GET `/movies` - все документы movies пользователя
 - POST `/movies` - создать документ movies
 - DELETE `/movies/:id` - удалить документ movies по id
+
+Все необработанные пути обрабатываются отдельным контроллером.
 
 ### Схемы:
 
