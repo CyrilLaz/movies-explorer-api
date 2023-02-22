@@ -11,6 +11,9 @@ const {
   unUniqueStatus,
   dataErrorStatus,
 } = require('../constants/errorStatuses');
+const {
+  nonUniqueEmailMessage, incorrectIdMessage, incorrectDataMessage, defaultErrorMessage,
+} = require('../constants/messages').error;
 
 module.exports = (err, req, res, next) => {
   const { statusCode = defaultErrorStatus, message } = err;
@@ -40,21 +43,22 @@ module.exports = (err, req, res, next) => {
 
   if (err.code === 11000) {
     return res.status(unUniqueStatus).send({
-      data: { message: 'Пользователь с таким email уже зарегистрирован' },
+      data: { message: nonUniqueEmailMessage },
     });
   }
 
   if (err.name === 'CastError') {
     return res
       .status(dataErrorStatus)
-      .send({ data: { message: 'Передан некорректный _id' } });
+      .send({ data: { message: incorrectIdMessage } });
   }
+
   if (err.name === 'ValidationError') {
     return res.status(dataErrorStatus).send({
-      data: { message: 'Переданы некорректные данные.' },
+      data: { message: incorrectDataMessage },
     });
   }
   return res
     .status(statusCode)
-    .send({ data: { message: 'На сервере произошла ошибка' } });
+    .send({ data: { message: defaultErrorMessage } });
 };

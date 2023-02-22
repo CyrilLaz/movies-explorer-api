@@ -1,3 +1,5 @@
+const { dublicateMovieMessage, noRightToRemoveMovieMessage } = require('../constants/messages').error;
+const { removeMovieFromCollMessage } = require('../constants/messages').report;
 const DublicateError = require('../errors/DublicateError');
 const NoRightError = require('../errors/NoRightError');
 const Movie = require('../models/Movie');
@@ -15,7 +17,7 @@ const addMovie = (req, res, next) => {
   Movie.isDublicate(userId, movieId)
     .then((isDubl) => {
       if (isDubl) {
-        throw new DublicateError('Такая карточка уже есть у пользователя');
+        throw new DublicateError(dublicateMovieMessage);
       }
       return Movie.create({ ...data, movieId, owner: userId });
     })
@@ -28,10 +30,10 @@ const removeMovie = (req, res, next) => {
   const userId = req.user;
   Movie.isOwned(userId, id).then((isOwned) => {
     if (!isOwned) {
-      throw new NoRightError('Удалить фильм из коллекции может только владелец коллекции');
+      throw new NoRightError(noRightToRemoveMovieMessage);
     }
     return Movie.findByIdAndRemove(id).then(() => {
-      res.send({ data: { message: 'Фильм удален из коллекции' } });
+      res.send({ data: { message: removeMovieFromCollMessage } });
     });
   }).catch(next);
 };

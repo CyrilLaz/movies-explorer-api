@@ -2,6 +2,7 @@ const { Schema, model } = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcryptjs');
 const UncorrectLoginError = require('../errors/UncorrectLoginError');
+const { incorrectEmailMessage, incorrectLoginDataMessage } = require('../constants/messages').error;
 
 const userSchema = new Schema(
   {
@@ -13,7 +14,7 @@ const userSchema = new Schema(
         validator(v) {
           return isEmail(v);
         },
-        message: 'Передан не правильный адрес почты',
+        message: incorrectEmailMessage,
       },
     },
     password: {
@@ -40,14 +41,14 @@ userSchema.statics.findUserByCredentials = function (email, password) {
     .then((user) => {
       if (!user) {
         return Promise.reject(
-          new UncorrectLoginError('Неправильные почта или пароль'),
+          new UncorrectLoginError(incorrectLoginDataMessage),
         );
       }
 
       return bcrypt.compare(password, user.password).then((matched) => {
         if (!matched) {
           return Promise.reject(
-            new UncorrectLoginError('Неправильные почта или пароль'),
+            new UncorrectLoginError(incorrectLoginDataMessage),
           );
         }
         return user.toObject();

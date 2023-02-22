@@ -1,6 +1,7 @@
 /* eslint-disable no-useless-escape */
 const { Schema, model } = require('mongoose');
 const NoExistError = require('../errors/NoExistError');
+const { incorrectUrlMessage, movieNotFoundMessage } = require('../constants/messages').error;
 
 const movieSchema = Schema(
   {
@@ -32,7 +33,7 @@ const movieSchema = Schema(
           const regex = /^https?:\/\/([\w\-]+\.)+[a-z]{2,}(\/[\w#\-\.~:\[\]@!\$&'\(\)\*\+,;=,]*)*$/i;
           return regex.test(v);
         },
-        message: 'url не прошел валидацию',
+        message: incorrectUrlMessage,
       },
     },
     trailerLink: {
@@ -43,7 +44,7 @@ const movieSchema = Schema(
           const regex = /^https?:\/\/([\w\-]+\.)+[a-z]{2,}(\/[\w#\-\.~:\[\]@!\$&'\(\)\*\+,;=,]*)*$/i;
           return regex.test(v);
         },
-        message: 'url не прошел валидацию',
+        message: incorrectUrlMessage,
       },
     },
     thumbnail: {
@@ -54,7 +55,7 @@ const movieSchema = Schema(
           const regex = /^https?:\/\/([\w\-]+\.)+[a-z]{2,}(\/[\w#\-\.~:\[\]@!\$&'\(\)\*\+,;=,]*)*$/i;
           return regex.test(v);
         },
-        message: 'url не прошел валидацию',
+        message: incorrectUrlMessage,
       },
     },
     owner: { type: Schema.Types.ObjectId, ref: 'user', required: true },
@@ -71,7 +72,7 @@ movieSchema.statics.isDublicate = function (userId, movieId) {
 
 movieSchema.statics.isOwned = function (userId, id) {
   return this.findById(id).then((movie) => {
-    if (!movie) throw new NoExistError('Такого фильма не существует');
+    if (!movie) throw new NoExistError(movieNotFoundMessage);
     return movie.owner._id.toString() === userId._id;
   });
 };

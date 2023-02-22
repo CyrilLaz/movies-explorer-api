@@ -5,7 +5,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser');
 const helmet = require('helmet');
 
-const { PATH_MONGO, PORT } = require('./constants/сonnectSettings');
+const { PATH_MONGO, PORT } = require('./constants/connectSettings');
 
 const handleErrors = require('./middlewares/handleErrors');
 
