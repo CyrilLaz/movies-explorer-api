@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcryptjs');
-const UnauthorizedError = require('../errors/Unauthorized');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 const { incorrectEmailMessage, incorrectLoginDataMessage } = require('../constants/messages').error;
 
 const userSchema = new Schema(

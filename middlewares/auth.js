@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const jwtKey = require('../constants/jwtKey');
-const UnauthorizedError = require('../errors/Unauthorized');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 const { requiredLoginMessage } = require('../constants/messages').error;
 
 module.exports = async (req, res, next) => {

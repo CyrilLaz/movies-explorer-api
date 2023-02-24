@@ -2,7 +2,7 @@ const { isCelebrateError } = require('celebrate');
 const NoExistError = require('../errors/NoExistError');
 const NoRightError = require('../errors/NoRightError');
 const TooManyRequestError = require('../errors/TooManyRequestError');
-const UnauthorizedError = require('../errors/Unauthorized');
+const UnauthorizedError = require('../errors/UnauthorizedError');
 const DublicateError = require('../errors/DublicateError');
 const {
   defaultErrorStatus,
