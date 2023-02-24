@@ -4,7 +4,7 @@ module.exports.loginValidate = celebrate(
   {
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      password: Joi.string().required().min(2),
+      password: Joi.string().required(),
     }),
   },
 );
@@ -13,7 +13,7 @@ module.exports.createUserValidate = celebrate(
   {
     body: Joi.object().keys({
       email: Joi.string().required().email(),
-      password: Joi.string().required().min(2),
+      password: Joi.string().required(),
       name: Joi.string().required().min(2).max(30),
     }),
   },
@@ -22,9 +22,9 @@ module.exports.createUserValidate = celebrate(
 module.exports.changeUserDataValidate = celebrate(
   {
     body: Joi.object().keys({
-      name: Joi.string().min(2).max(30),
-      email: Joi.string().email(),
-    }).or('name', 'email'),
+      name: Joi.string().required().min(2).max(30),
+      email: Joi.string().required().email(),
+    }),
   },
 );
 
@@ -34,35 +34,26 @@ module.exports.addMovieValidate = celebrate(
       country: Joi.string().required().min(2).max(30),
       director: Joi.string().required().min(2).max(30),
       duration: Joi.number().required(),
-      year: Joi.string().required().min(2).max(4),
-      description: Joi.string().required().min(10).max(1000),
-      image: Joi.string().required().min(2).uri({
+      year: Joi.string().required(),
+      description: Joi.string().required(),
+      image: Joi.string().required().uri({
         scheme: [
           /https?/,
         ],
       }),
-      trailerLink: Joi.string().required().min(2).uri({
+      trailerLink: Joi.string().required().uri({
         scheme: [
           /https?/,
         ],
       }),
-      thumbnail: Joi.string().required().min(2).uri({
+      thumbnail: Joi.string().required().uri({
         scheme: [
           /https?/,
         ],
       }),
-      movieId: Joi.string().required().pattern(/^[a-z0-9]{24}$/), // потом надо првоерить как выглядит это поле
-      nameRU: Joi.string().required().min(2).max(30),
-      nameEN: Joi.string().required().min(2).max(30),
-    }),
-  },
-);
-
-module.exports.tokenValidate = celebrate(
-  {
-    cookies: Joi.object().keys({
-      // eslint-disable-next-line no-useless-escape
-      jwt: Joi.string().pattern(/^[\w\._\-]{10,}$/),
+      movieId: Joi.number().required(), // приходит целое число
+      nameRU: Joi.string().required(),
+      nameEN: Joi.string().required(),
     }),
   },
 );
@@ -70,8 +61,7 @@ module.exports.tokenValidate = celebrate(
 module.exports.idValidate = celebrate(
   {
     params: Joi.object().keys({
-      // eslint-disable-next-line no-useless-escape
-      id: Joi.string().required().pattern(/^[a-z0-9]{24}$/),
+      id: Joi.string().required().hex(),
     }),
   },
 );

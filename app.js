@@ -13,9 +13,10 @@ const { requestLogger, errorLogger } = require('./middlewares/logger');
 const apiRequestLimiter = require('./middlewares/apiRequestLimiter');
 const cors = require('./middlewares/cors');
 const routers = require('./routers');
-const cookieJwtToken = require('./middlewares/cookieJwtToken');
 
 const app = express();
+
+app.use(requestLogger);
 
 app.use(apiRequestLimiter);
 app.use(helmet());
@@ -24,15 +25,13 @@ app.use(cookieParser());
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
 
-app.use(cookieJwtToken);
-
 mongoose.set('strictQuery', true);
 mongoose.connect(PATH_MONGO);
-app.use(requestLogger);
 app.use(routers);
 app.use(errorLogger);
 app.use(handleErrors);
 
 app.listen(PORT, () => {
+  // eslint-disable-next-line no-console
   console.log(`App listening on port ${PORT}`);
 });

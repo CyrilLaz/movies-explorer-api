@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const jwtKey = require('../constants/jwtKey');
-const UnAuthError = require('../errors/UnAuthError');
+const UnauthorizedError = require('../errors/Unauthorized');
 const { requiredLoginMessage } = require('../constants/messages').error;
 
 module.exports = async (req, res, next) => {
@@ -8,12 +8,12 @@ module.exports = async (req, res, next) => {
 
   let payload;
   try {
-    if (!cookies || !cookies.jwt) return next(new UnAuthError(requiredLoginMessage));
+    if (!cookies || !cookies.jwt) return next(new UnauthorizedError(requiredLoginMessage));
 
     const { jwt: token } = cookies;
     payload = jwt.verify(token, jwtKey); // секретный код
   } catch (error) {
-    return next(new UnAuthError(requiredLoginMessage));
+    return next(new UnauthorizedError(requiredLoginMessage));
   }
   req.user = payload;
 

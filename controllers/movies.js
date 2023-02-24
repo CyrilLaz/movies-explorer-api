@@ -33,7 +33,7 @@ const removeMovie = (req, res, next) => {
       throw new NoRightError(noRightToRemoveMovieMessage);
     }
     return Movie.findByIdAndRemove(id).then(() => {
-      res.send({ data: { message: removeMovieFromCollMessage } });
+      res.send({ message: removeMovieFromCollMessage });
     });
   }).catch(next);
 };

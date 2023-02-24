@@ -1,7 +1,7 @@
 const { Schema, model } = require('mongoose');
 const { isEmail } = require('validator');
 const bcrypt = require('bcryptjs');
-const UncorrectLoginError = require('../errors/UncorrectLoginError');
+const UnauthorizedError = require('../errors/Unauthorized');
 const { incorrectEmailMessage, incorrectLoginDataMessage } = require('../constants/messages').error;
 
 const userSchema = new Schema(
@@ -20,7 +20,6 @@ const userSchema = new Schema(
     password: {
       type: String,
       required: true,
-      minlength: 8,
       select: false,
     },
     name: {
@@ -33,27 +32,28 @@ const userSchema = new Schema(
   { versionKey: false },
 );
 
-// eslint-disable-next-line func-names
-userSchema.statics.findUserByCredentials = function (email, password) {
+userSchema.statics = {
+  findUserByCredentials(email, password) {
   // попытаемся найти пользователя по почте
-  return this.findOne({ email })
-    .select('+password')
-    .then((user) => {
-      if (!user) {
-        return Promise.reject(
-          new UncorrectLoginError(incorrectLoginDataMessage),
-        );
-      }
-
-      return bcrypt.compare(password, user.password).then((matched) => {
-        if (!matched) {
+    return this.findOne({ email })
+      .select('+password')
+      .then((user) => {
+        if (!user) {
           return Promise.reject(
-            new UncorrectLoginError(incorrectLoginDataMessage),
+            new UnauthorizedError(incorrectLoginDataMessage),
           );
         }
-        return user.toObject();
+
+        return bcrypt.compare(password, user.password).then((matched) => {
+          if (!matched) {
+            return Promise.reject(
+              new UnauthorizedError(incorrectLoginDataMessage),
+            );
+          }
+          return user.toObject();
+        });
       });
-    });
+  },
 };
 
 module.exports = model('user', userSchema);

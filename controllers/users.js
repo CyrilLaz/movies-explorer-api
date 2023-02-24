@@ -1,4 +1,6 @@
 const bcrypt = require('bcryptjs');
+const jwt = require('jsonwebtoken');
+const jwtKey = require('../constants/jwtKey');
 const User = require('../models/User');
 const NoExistError = require('../errors/NoExistError');
 const { userNotFoundMessage } = require('../constants/messages').error;
@@ -6,16 +8,15 @@ const { logoutMessage } = require('../constants/messages').report;
 
 const createUser = (req, res, next) => {
   const { name, email, password } = req.body;
-  User.init()
-    .then(() => bcrypt.hash(password, 10))
+
+  bcrypt.hash(password, 10)
     .then((hash) => User.create({
       name,
       email,
       password: hash,
     }))
     .then((user) => user.toObject())
-    .then((user) => res.cookieJwtToken(user._id)
-      .send({ data: { ...user, password: undefined } }))
+    .then((user) => res.send({ data: { ...user, password: undefined } }))
     .catch(next);
 };
 
@@ -23,9 +24,20 @@ const login = (req, res, next) => {
   const { email, password } = req.body;
 
   User.findUserByCredentials(email, password)
-    .then((user) => res
-      .cookieJwtToken(user._id)
-      .send({ data: { ...user, password: undefined } }))
+    .then((user) => {
+      const token = jwt.sign(
+        { _id: user._id },
+        jwtKey, // секретный код
+        { expiresIn: '7d' },
+      );
+
+      return res.cookie('jwt', token, {
+        maxAge: 3600000 * 24 * 7,
+        httpOnly: true,
+        sameSite: true,
+      })
+        .send({ data: { ...user, password: undefined } });
+    })
     .catch(next);
 };
 
@@ -35,7 +47,7 @@ const logout = (req, res) => {
     .cookie('jwt', token, {
       maxAge: 0,
     })
-    .send({ data: { message: logoutMessage } });
+    .send({ message: logoutMessage });
 };
 
 const getUserData = (req, res, next) => {
