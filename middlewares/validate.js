@@ -31,8 +31,8 @@ module.exports.changeUserDataValidate = celebrate(
 module.exports.addMovieValidate = celebrate(
   {
     body: Joi.object().keys({
-      country: Joi.string().required().min(2).max(30),
-      director: Joi.string().required().min(2).max(30),
+      country: Joi.string().required().min(2),
+      director: Joi.string().required().min(2),
       duration: Joi.number().required(),
       year: Joi.string().required(),
       description: Joi.string().required(),
@@ -51,7 +51,7 @@ module.exports.addMovieValidate = celebrate(
           /https?/,
         ],
       }),
-      movieId: Joi.number().required(), // приходит целое число
+      id: Joi.number().required(), // приходит целое число
       nameRU: Joi.string().required(),
       nameEN: Joi.string().required(),
     }),

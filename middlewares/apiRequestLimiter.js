@@ -4,7 +4,7 @@ const { tooManyRequestMessage } = require('../constants/messages').error;
 
 module.exports = rateLimit({
   windowMs: 1 * 60 * 1000, // период подсчета ограничителя запросов
-  max: 10,
+  max: 1000,
   handler: (req, res, next) => next(
     new TooManyRequestError(tooManyRequestMessage),
   ),

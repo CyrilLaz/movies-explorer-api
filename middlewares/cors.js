@@ -1,4 +1,4 @@
-const { ALLOWED_CORS = ['http://localhost:3001'] } = process.env;
+const { ALLOWED_CORS = ['http://localhost:3000'] } = process.env;
 const DEFAULT_ALLOWED_METHODS = 'GET,HEAD,PATCH,POST,DELETE';
 const DEFAULT_ALLOWED_HEADERS = 'content-type, Authorization';
 

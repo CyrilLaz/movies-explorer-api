@@ -10,7 +10,10 @@ const {
   dataErrorStatus,
 } = require('../constants/errorStatuses');
 const {
-  nonUniqueEmailMessage, incorrectIdMessage, incorrectDataMessage, defaultErrorMessage,
+  nonUniqueEmailMessage,
+  incorrectIdMessage,
+  incorrectDataMessage,
+  defaultErrorMessage,
 } = require('../constants/messages').error;
 
 // eslint-disable-next-line no-unused-vars
@@ -27,14 +30,11 @@ module.exports = (err, req, res, next) => {
   }
 
   if (isCelebrateError(err)) {
-    const error = err.details.get('body')
-      || err.details.get('params');
+    const error = err.details.get('body') || err.details.get('params');
     const {
       details: [errorDetails],
     } = error;
-    return res
-      .status(dataErrorStatus)
-      .send({ message: errorDetails.message });
+    return res.status(dataErrorStatus).send({ message: errorDetails.message });
   }
 
   if (err.code === 11000) {
@@ -44,9 +44,7 @@ module.exports = (err, req, res, next) => {
   }
 
   if (err.name === 'CastError') {
-    return res
-      .status(dataErrorStatus)
-      .send({ message: incorrectIdMessage });
+    return res.status(dataErrorStatus).send({ message: incorrectIdMessage });
   }
 
   if (err.name === 'ValidationError') {
@@ -54,7 +52,6 @@ module.exports = (err, req, res, next) => {
       message: incorrectDataMessage,
     });
   }
-  return res
-    .status(statusCode)
-    .send({ message: defaultErrorMessage });
+
+  return res.status(statusCode).send({ message: defaultErrorMessage });
 };

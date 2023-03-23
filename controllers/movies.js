@@ -13,13 +13,13 @@ const getMovies = (req, res, next) => {
 
 const addMovie = (req, res, next) => {
   const userId = req.user;
-  const { movieId, ...data } = req.body;
-  Movie.isDublicate(userId, movieId)
+  const { id, ...data } = req.body;
+  Movie.isDublicate(userId, id)
     .then((isDubl) => {
       if (isDubl) {
         throw new DublicateError(dublicateMovieMessage);
       }
-      return Movie.create({ ...data, movieId, owner: userId });
+      return Movie.create({ ...data, id, owner: userId });
     })
     .then((movie) => res.send({ data: movie }))
     .catch(next);

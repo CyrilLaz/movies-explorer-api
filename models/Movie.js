@@ -57,7 +57,7 @@ const movieSchema = Schema(
       },
     },
     owner: { type: Schema.Types.ObjectId, ref: 'user', required: true },
-    movieId: { type: Number, required: true },
+    id: { type: Number, required: true },
     nameRU: { type: String, required: true },
     nameEN: { type: String, required: true },
   },
@@ -66,7 +66,7 @@ const movieSchema = Schema(
 
 movieSchema.statics = {
   isDublicate(userId, movieId) {
-    return this.findOne({ owner: userId, movieId }).then((movie) => !!movie);
+    return this.findOne({ owner: userId, id: movieId }).then((movie) => !!movie);
   },
   isOwned(userId, id) {
     return this.findById(id).then((movie) => {
